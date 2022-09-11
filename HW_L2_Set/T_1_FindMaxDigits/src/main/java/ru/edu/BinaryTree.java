@@ -1,8 +1,6 @@
 package ru.edu;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class BinaryTree {
 

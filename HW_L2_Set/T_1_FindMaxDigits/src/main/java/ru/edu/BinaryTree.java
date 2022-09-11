@@ -1,5 +1,7 @@
 package ru.edu;
 
+import java.util.Arrays;
+
 public class BinaryTree {
 
     private Node root;
@@ -44,7 +46,41 @@ public class BinaryTree {
      * @param upperBound - upper bound of maximums
      */
     public int[] findMaxDigits(int count, int upperBound) {
-        throw new RuntimeException("Not implemented");
+        int[] res = new int[count];
+        int index = count - 1;
+        int cmp = 0;
+
+        Node tmp = root;
+        Node prev = null;
+        int tmpUpperBound = Integer.valueOf(upperBound);
+        int maxValueInNode = findMax(tmp);
+
+        while (tmp != null) {
+            cmp = Integer.compare(tmpUpperBound, tmp.value);
+            if (cmp == 0) {
+                if (index < 0) {
+                    return res;
+                }
+                res[index] = tmp.value;
+                tmp = tmp.parent;
+                tmpUpperBound--;
+                index--;
+            } else if (cmp < 0) {
+                prev = tmp;
+                tmp = tmp.left;
+            } else { // cmp > 0
+                prev = tmp;
+                tmp = tmp.right;
+            }
+            if (maxValueInNode < upperBound && tmp == null) {
+                while (index > -1) {
+                    res[index] = prev.value;
+                    prev = prev.parent;
+                    index--;
+                }
+            }
+        }
+        return Arrays.stream(res).filter(x -> x != 0).toArray();
     }
 
     public void print() {
@@ -59,5 +95,20 @@ public class BinaryTree {
             System.out.print(" " + node.value);
             print(node.right);
         }
+    }
+
+    private int findMax(Node node) {
+        if (node == null)
+            return Integer.MIN_VALUE;
+
+        int res = node.value;
+        int lres = findMax(node.left);
+        int rres = findMax(node.right);
+
+        if (lres > res)
+            res = lres;
+        if (rres > res)
+            res = rres;
+        return res;
     }
 }
